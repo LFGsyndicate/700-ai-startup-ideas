@@ -1,5 +1,6 @@
 
 import { AgentArchetype, DocumentData, Industry, StartupIdea } from "@/types";
+import { parseKnowledgeBase } from "@/lib/knowledge-parser";
 
 // This is a mock version of what would be fetched from the Google Doc
 export const mockData: DocumentData = {
@@ -28,35 +29,51 @@ export const mockData: DocumentData = {
     [Industry.Retail]: "AI applications for inventory management, personalized recommendations, and customer experience.",
     [Industry.Other]: "AI solutions that span multiple industries or don't fit neatly into the above categories."
   },
-  startupIdeas: generateMockStartupIdeas()
+  startupIdeas: []
 };
 
+// Initialize with parsed data from knowledge base
+mockData.startupIdeas = parseKnowledgeBase();
+
+// If we don't have enough ideas from the knowledge base, supplement with generated ones
+if (mockData.startupIdeas.length < 100) {
+  // Generate additional mock data
+  const additionalIdeas = generateMockStartupIdeas();
+  
+  // Add only as many as needed to reach 700
+  const neededCount = Math.max(0, 700 - mockData.startupIdeas.length);
+  mockData.startupIdeas = [
+    ...mockData.startupIdeas,
+    ...additionalIdeas.slice(0, neededCount)
+  ];
+}
+
 function generateMockStartupIdeas(): StartupIdea[] {
-  // In a real implementation, this data would come from parsing the Google Doc
+  // Generate some sample data for the prototype
   const ideas: StartupIdea[] = [];
   
-  // Just generating some sample data for the prototype
   const companyPrefixes = ["AI", "Gen", "Smart", "Neural", "Deep", "Future", "Tech", "Quantum", "Data", "Cognitive"];
   const companySuffixes = ["Labs", "AI", "Tech", "Solutions", "Intelligence", "Systems", "Mind", "Logic", "Insight", "Vision"];
   
-  // Generate 30 mock ideas (in real implementation, this would be up to 700 from the Google Doc)
-  let id = 1;
+  let id = mockData.startupIdeas.length + 1;
   
   // For each industry
   Object.values(Industry).forEach(industry => {
     // For each archetype
     Object.values(AgentArchetype).forEach(archetype => {
-      // Add a sample idea
-      const companyName = `${companyPrefixes[Math.floor(Math.random() * companyPrefixes.length)]}${companySuffixes[Math.floor(Math.random() * companySuffixes.length)]}`;
-      
-      ideas.push({
-        id: `idea-${id++}`,
-        companyName,
-        description: `An AI ${archetype} that helps businesses in the ${industry} industry by automating key processes and improving outcomes.`,
-        link: "https://example.com",
-        archetype,
-        industry
-      });
+      // Add multiple sample ideas per combination
+      for (let i = 0; i < 10; i++) {
+        const companyName = `${companyPrefixes[Math.floor(Math.random() * companyPrefixes.length)]}${companySuffixes[Math.floor(Math.random() * companySuffixes.length)]}`;
+        
+        ideas.push({
+          id: `idea-${id++}`,
+          companyName,
+          description: `An AI ${archetype} that helps businesses in the ${industry} industry by automating key processes and improving outcomes.`,
+          link: "https://example.com",
+          archetype,
+          industry
+        });
+      }
     });
   });
   

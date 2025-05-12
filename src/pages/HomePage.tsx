@@ -5,13 +5,15 @@ import { getDocumentMetadata, getAllIdeas } from '@/data/mock-data';
 import { AgentArchetype, Industry, StartupIdea } from '@/types';
 import { Button } from '@/components/ui/button';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { useLanguage } from '@/hooks/use-language';
 
 export default function HomePage() {
   const [ideas, setIdeas] = useState<StartupIdea[]>([]);
   const { title, author, telegramLink, introduction } = getDocumentMetadata();
+  const { t } = useLanguage();
   
   useEffect(() => {
-    // In a real implementation, this would fetch data from the Google Doc
     const fetchData = async () => {
       const allIdeas = getAllIdeas();
       setIdeas(allIdeas);
@@ -31,32 +33,42 @@ export default function HomePage() {
     return { name: archetype.split(' ')[0], value: count };
   });
   
-  const COLORS = ['#8884d8', '#83a6ed', '#8dd1e1', '#82ca9d', '#a4de6c', '#d0ed57', '#ffc658', '#ff8042', '#fa8072', '#ba68c8', '#64b5f6'];
+  const COLORS = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#ECFDF5', '#059669', '#047857', '#065F46', '#064E3B', '#022C22'];
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero section */}
-      <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-16 md:py-24">
+      <section className="green-gradient py-16 md:py-24">
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none animate-fade-in">
+          <div className="flex flex-col items-center space-y-6 text-center">
+            <div className="space-y-3">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl/none animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">
                 {title}
               </h1>
-              <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
-                A comprehensive collection of real-world generative AI applications for entrepreneurs and innovators.
+              <p className="mx-auto max-w-[700px] text-gray-700 dark:text-gray-300 md:text-xl">
+                {t('home.introduction')}
               </p>
             </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Button asChild className="hover-scale">
-                <Link to="/industries">Browse Industries</Link>
+            <div className="flex flex-col gap-3 min-[400px]:flex-row">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 transition-all">
+                <Link to="/industries">
+                  {t('nav.industries')}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
-              <Button asChild variant="outline" className="hover-scale">
-                <Link to="/archetypes">Explore AI Agent Types</Link>
+              <Button asChild variant="outline" size="lg" className="border-primary/20 hover:border-primary/50">
+                <Link to="/archetypes">
+                  {t('nav.archetypes')}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
             </div>
-            <div className="mt-4 text-sm text-muted-foreground">
-              Compiled by {author} • <a href={telegramLink} target="_blank" rel="noreferrer" className="text-primary hover:underline">Telegram: @ruhunt</a>
+            <div className="mt-4 text-sm text-muted-foreground flex items-center justify-center gap-2">
+              {t('app.author')} • 
+              <a href={telegramLink} target="_blank" rel="noreferrer" className="text-primary hover:underline flex items-center gap-1">
+                Telegram: @ruhunt
+                <ExternalLink className="h-3 w-3" />
+              </a>
             </div>
           </div>
         </div>
@@ -67,27 +79,37 @@ export default function HomePage() {
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 md:grid-cols-2 md:gap-16">
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold tracking-tighter md:text-3xl">The Generative AI Revolution</h2>
-              <p className="text-gray-500 dark:text-gray-400">
+              <h2 className="section-title">{t('home.revolution')}</h2>
+              <p className="text-gray-700 dark:text-gray-300">
                 {introduction}
               </p>
               <div className="flex gap-4">
-                <Button asChild variant="link" className="p-0">
-                  <a href={telegramLink} target="_blank" rel="noreferrer" className="hover:underline">Join our Telegram</a>
+                <Button asChild variant="link" className="p-0 text-primary">
+                  <a href={telegramLink} target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
+                    {t('home.join_telegram')}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
                 </Button>
               </div>
             </div>
             
             {/* Visualization */}
-            <div className="glass-card p-6">
-              <h3 className="text-lg font-medium mb-4">Ideas by Agent Archetype</h3>
+            <div className="glass-card p-6 card-hover">
+              <h3 className="text-lg font-medium mb-4">{t('home.ideas_by_archetype')}</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={archetypeData} layout="vertical">
                     <XAxis type="number" />
                     <YAxis type="category" dataKey="name" />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#8884d8" radius={[0, 4, 4, 0]}>
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        borderColor: '#10B981',
+                        borderRadius: '0.5rem',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                      }}
+                    />
+                    <Bar dataKey="value" radius={[0, 4, 4, 0]}>
                       {archetypeData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
@@ -101,31 +123,34 @@ export default function HomePage() {
       </section>
       
       {/* Agent Archetypes Preview */}
-      <section className="content-section bg-muted">
+      <section className="content-section green-gradient">
         <div className="container px-4 md:px-6">
           <div className="space-y-6 text-center">
-            <h2 className="text-2xl font-bold tracking-tighter md:text-3xl">The Six Key AI Agent Archetypes</h2>
-            <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400">
-              Every GenAI startup can be categorized into one of these six fundamental agent types.
+            <h2 className="section-title">{t('home.key_agent_types')}</h2>
+            <p className="mx-auto max-w-[700px] text-gray-700 dark:text-gray-300">
+              {t('home.agent_types_description')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            {Object.values(AgentArchetype).map((archetype) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+            {Object.values(AgentArchetype).map((archetype, index) => (
               <Link 
                 key={archetype} 
                 to={`/archetypes/${encodeURIComponent(archetype)}`}
-                className="glass-card p-6 hover-scale transition-all"
+                className="glass-card p-6 card-hover"
               >
-                <h3 className="text-lg font-medium mb-2">{archetype}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {ideas.filter(idea => idea.archetype === archetype).length} startup ideas
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <span className="text-lg font-bold text-primary">{index + 1}</span>
+                </div>
+                <h3 className="text-lg font-medium mb-2">{t(`archetype.${archetype.split(' ')[0].toLowerCase()}`)}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {ideas.filter(idea => idea.archetype === archetype).length} {t('home.startup_ideas')}
                 </p>
               </Link>
             ))}
           </div>
           <div className="flex justify-center mt-8">
-            <Button asChild variant="outline">
-              <Link to="/archetypes">Explore All Agent Types</Link>
+            <Button asChild variant="outline" className="border-primary/20 hover:border-primary/50">
+              <Link to="/archetypes">{t('home.explore_agent_types')}</Link>
             </Button>
           </div>
         </div>
@@ -135,45 +160,45 @@ export default function HomePage() {
       <section className="content-section">
         <div className="container px-4 md:px-6">
           <div className="space-y-6 text-center">
-            <h2 className="text-2xl font-bold tracking-tighter md:text-3xl">Industry-by-Industry Breakdown</h2>
-            <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400">
-              Discover AI startup opportunities across these major industry sectors.
+            <h2 className="section-title">{t('home.industry_breakdown')}</h2>
+            <p className="mx-auto max-w-[700px] text-gray-700 dark:text-gray-300">
+              {t('home.industry_description')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
             {Object.values(Industry).slice(0, 6).map((industry) => (
               <Link 
                 key={industry} 
                 to={`/industries/${encodeURIComponent(industry)}`}
-                className="glass-card p-6 hover-scale transition-all"
+                className="glass-card p-6 card-hover"
               >
-                <h3 className="text-lg font-medium mb-2">{industry}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {ideas.filter(idea => idea.industry === industry).length} startup ideas
+                <h3 className="text-lg font-medium mb-2">{t(`industry.${industry.split(' & ')[0].toLowerCase()}`)}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {ideas.filter(idea => idea.industry === industry).length} {t('home.startup_ideas')}
                 </p>
               </Link>
             ))}
           </div>
           <div className="flex justify-center mt-8">
-            <Button asChild variant="outline">
-              <Link to="/industries">View All Industries</Link>
+            <Button asChild variant="outline" className="border-primary/20 hover:border-primary/50">
+              <Link to="/industries">{t('home.view_all_industries')}</Link>
             </Button>
           </div>
         </div>
       </section>
       
       {/* Data visualization */}
-      <section className="content-section bg-muted">
+      <section className="content-section green-gradient">
         <div className="container px-4 md:px-6">
           <div className="space-y-6 text-center">
-            <h2 className="text-2xl font-bold tracking-tighter md:text-3xl">Distribution of AI Startup Ideas</h2>
-            <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400">
-              Visualize the spread of AI applications across different industries.
+            <h2 className="section-title">{t('home.distribution')}</h2>
+            <p className="mx-auto max-w-[700px] text-gray-700 dark:text-gray-300">
+              {t('home.distribution_description')}
             </p>
           </div>
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-8">
-            <div className="w-full md:w-1/2 h-72 glass-card p-6">
-              <h3 className="text-lg font-medium mb-4 text-center">Distribution by Industry</h3>
+            <div className="w-full md:w-1/2 h-72 glass-card p-6 card-hover">
+              <h3 className="text-lg font-medium mb-4 text-center">{t('home.distribution_by_industry')}</h3>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -181,7 +206,7 @@ export default function HomePage() {
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
-                    fill="#8884d8"
+                    fill="#10B981"
                     dataKey="value"
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
@@ -189,7 +214,14 @@ export default function HomePage() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      borderColor: '#10B981',
+                      borderRadius: '0.5rem',
+                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -198,21 +230,21 @@ export default function HomePage() {
       </section>
       
       {/* CTA */}
-      <section className="content-section bg-gradient-to-br from-primary/10 via-background to-secondary/10">
+      <section className="content-section green-gradient-bright">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold tracking-tighter md:text-3xl">Ready to Explore AI Startup Opportunities?</h2>
-              <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400">
-                Dive into our comprehensive collection of generative AI applications and find inspiration for your next venture.
+              <h2 className="text-2xl font-bold tracking-tighter md:text-3xl text-white">{t('home.ready')}</h2>
+              <p className="mx-auto max-w-[700px] text-white/90">
+                {t('home.ready_description')}
               </p>
             </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Button asChild className="hover-scale">
-                <Link to="/industries">Browse Industries</Link>
+            <div className="flex flex-col gap-3 min-[400px]:flex-row">
+              <Button asChild className="bg-white text-primary hover:bg-white/90">
+                <Link to="/industries">{t('nav.industries')}</Link>
               </Button>
-              <Button asChild variant="outline" className="hover-scale">
-                <a href={telegramLink} target="_blank" rel="noreferrer">Join our Telegram</a>
+              <Button asChild variant="outline" className="border-white text-white hover:bg-white/20">
+                <a href={telegramLink} target="_blank" rel="noreferrer">{t('home.join_telegram')}</a>
               </Button>
             </div>
           </div>

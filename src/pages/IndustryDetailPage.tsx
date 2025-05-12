@@ -6,7 +6,8 @@ import { AgentArchetype, Industry, StartupIdea } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Search, X, ArrowLeft } from 'lucide-react';
+import { useLanguage } from '@/hooks/use-language';
 
 export default function IndustryDetailPage() {
   const { industry } = useParams<{ industry: string }>();
@@ -14,6 +15,7 @@ export default function IndustryDetailPage() {
   const [ideas, setIdeas] = useState<StartupIdea[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [activeArchetype, setActiveArchetype] = useState<string>("all");
+  const { t } = useLanguage();
   
   useEffect(() => {
     if (industry) {
@@ -44,50 +46,67 @@ export default function IndustryDetailPage() {
   
   return (
     <div className="container px-4 py-8 md:py-12 md:px-6">
-      <div className="flex flex-col space-y-4 md:space-y-8">
+      <div className="flex flex-col space-y-6 md:space-y-8">
         <div>
           <Link 
             to="/industries" 
-            className="text-sm text-muted-foreground hover:text-primary transition-colors mb-2 inline-block"
+            className="text-sm text-primary hover:text-primary/80 transition-colors mb-3 inline-flex items-center gap-1"
           >
-            ← Back to All Industries
+            <ArrowLeft className="h-4 w-4" />
+            {t('industry_detail.back')}
           </Link>
-          <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-2">
-            {industry}
+          <h1 className="page-title mb-3">
+            {industry && t(`industry.${(industry as string).split(' & ')[0].toLowerCase()}`)}
           </h1>
-          <p className="text-lg text-gray-500 dark:text-gray-400 max-w-[900px]">
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-[900px]">
             {description}
           </p>
         </div>
         
         <div className="flex flex-col md:flex-row gap-4">
-          <input
-            type="text"
-            placeholder="Search ideas..."
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div className="relative flex-grow">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="text"
+              placeholder={t('industry_detail.search_placeholder')}
+              className="flex h-10 w-full rounded-full border border-input bg-background pl-10 pr-4 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && (
+              <button
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                onClick={() => setSearchTerm("")}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
           <Button 
             variant="outline"
             onClick={() => setSearchTerm("")}
             disabled={!searchTerm}
-            className="md:w-auto w-full"
+            className="md:w-auto w-full rounded-full border-primary/20 hover:border-primary/50"
           >
-            Clear
+            {t('industries.clear')}
           </Button>
         </div>
         
-        <Tabs defaultValue="all" onValueChange={setActiveArchetype}>
-          <TabsList className="grid grid-cols-3 md:grid-cols-7 mb-4">
-            <TabsTrigger value="all">All</TabsTrigger>
+        <Tabs defaultValue="all" onValueChange={setActiveArchetype} className="w-full">
+          <TabsList className="inline-flex h-auto p-1 bg-muted rounded-full w-full md:w-auto overflow-x-auto mb-6">
+            <TabsTrigger 
+              value="all" 
+              className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
+              {t('industry_detail.all')}
+            </TabsTrigger>
             {archetypes.map((archetype) => (
               <TabsTrigger 
                 key={archetype} 
                 value={archetype}
-                className="hidden md:flex"
+                className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground whitespace-nowrap"
               >
-                {archetype.split(' ')[0]}
+                {t(`archetype.${archetype.split(' ')[0].toLowerCase()}`)}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -95,22 +114,25 @@ export default function IndustryDetailPage() {
           <TabsContent value="all">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredIdeas.map((idea) => (
-                <Card key={idea.id} className="flex flex-col">
+                <Card key={idea.id} className="flex flex-col card-hover border-primary/10">
                   <CardHeader>
-                    <CardTitle>{idea.companyName}</CardTitle>
-                    <CardDescription>{idea.archetype}</CardDescription>
+                    <CardTitle className="text-xl">{idea.companyName}</CardTitle>
+                    <CardDescription>
+                      {t(`archetype.${idea.archetype.split(' ')[0].toLowerCase()}`)}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="flex-1">
-                    <p>{idea.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300">{idea.description}</p>
                   </CardContent>
-                  <CardFooter>
+                  <CardFooter className="border-t border-primary/5 pt-4">
                     <a 
                       href={idea.link} 
                       target="_blank" 
                       rel="noreferrer" 
-                      className="inline-flex items-center gap-2 text-primary hover:underline"
+                      className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
                     >
-                      Visit Website <ExternalLink className="h-4 w-4" />
+                      {t('industry_detail.visit_website')} 
+                      <ExternalLink className="h-4 w-4" />
                     </a>
                   </CardFooter>
                 </Card>
@@ -118,10 +140,10 @@ export default function IndustryDetailPage() {
               
               {filteredIdeas.length === 0 && (
                 <div className="col-span-full text-center py-8">
-                  <p className="text-muted-foreground">No ideas found matching your search.</p>
+                  <p className="text-muted-foreground">{t('industry_detail.no_results')}</p>
                   {searchTerm && (
-                    <Button variant="link" onClick={() => setSearchTerm("")}>
-                      Clear Search
+                    <Button variant="link" onClick={() => setSearchTerm("")} className="text-primary">
+                      {t('industries.clear')}
                     </Button>
                   )}
                 </div>
@@ -135,22 +157,25 @@ export default function IndustryDetailPage() {
                 {filteredIdeas
                   .filter(idea => idea.archetype === archetype)
                   .map((idea) => (
-                    <Card key={idea.id} className="flex flex-col">
+                    <Card key={idea.id} className="flex flex-col card-hover border-primary/10">
                       <CardHeader>
-                        <CardTitle>{idea.companyName}</CardTitle>
-                        <CardDescription>{idea.archetype}</CardDescription>
+                        <CardTitle className="text-xl">{idea.companyName}</CardTitle>
+                        <CardDescription>
+                          {t(`archetype.${idea.archetype.split(' ')[0].toLowerCase()}`)}
+                        </CardDescription>
                       </CardHeader>
                       <CardContent className="flex-1">
-                        <p>{idea.description}</p>
+                        <p className="text-gray-600 dark:text-gray-300">{idea.description}</p>
                       </CardContent>
-                      <CardFooter>
+                      <CardFooter className="border-t border-primary/5 pt-4">
                         <a 
                           href={idea.link} 
                           target="_blank" 
                           rel="noreferrer" 
-                          className="inline-flex items-center gap-2 text-primary hover:underline"
+                          className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
                         >
-                          Visit Website <ExternalLink className="h-4 w-4" />
+                          {t('industry_detail.visit_website')} 
+                          <ExternalLink className="h-4 w-4" />
                         </a>
                       </CardFooter>
                     </Card>
@@ -159,10 +184,10 @@ export default function IndustryDetailPage() {
                 
                 {filteredIdeas.filter(idea => idea.archetype === archetype).length === 0 && (
                   <div className="col-span-full text-center py-8">
-                    <p className="text-muted-foreground">No ideas found matching your search.</p>
+                    <p className="text-muted-foreground">{t('industry_detail.no_results')}</p>
                     {searchTerm && (
-                      <Button variant="link" onClick={() => setSearchTerm("")}>
-                        Clear Search
+                      <Button variant="link" onClick={() => setSearchTerm("")} className="text-primary">
+                        {t('industries.clear')}
                       </Button>
                     )}
                   </div>
