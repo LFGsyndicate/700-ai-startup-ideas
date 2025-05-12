@@ -12,28 +12,31 @@ import ArchetypeDetailPage from "./pages/ArchetypeDetailPage";
 import IndustriesPage from "./pages/IndustriesPage";
 import IndustryDetailPage from "./pages/IndustryDetailPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import { LanguageProvider } from "./hooks/use-language";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="system">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/archetypes" element={<ArchetypesPage />} />
-              <Route path="/archetypes/:archetype" element={<ArchetypeDetailPage />} />
-              <Route path="/industries" element={<IndustriesPage />} />
-              <Route path="/industries/:industry" element={<IndustryDetailPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      <LanguageProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/archetypes" element={<ArchetypesPage />} />
+                <Route path="/archetypes/:archetype" element={<ArchetypeDetailPage />} />
+                <Route path="/industries" element={<IndustriesPage />} />
+                <Route path="/industries/:industry" element={<IndustryDetailPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </LanguageProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

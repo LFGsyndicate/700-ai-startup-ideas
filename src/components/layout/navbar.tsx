@@ -1,14 +1,16 @@
 
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Menu, X, Search, Github } from 'lucide-react';
+import { Menu, X, Search, Github, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { useLanguage } from '@/hooks/use-language';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { language, toggleLanguage } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,28 +40,37 @@ export function Navbar() {
             to="/" 
             className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/' ? 'text-primary' : 'text-foreground/60'}`}
           >
-            Home
+            {language === 'en' ? 'Home' : 'Главная'}
           </Link>
           <Link 
             to="/archetypes" 
             className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname.startsWith('/archetypes') ? 'text-primary' : 'text-foreground/60'}`}
           >
-            AI Agent Archetypes
+            {language === 'en' ? 'AI Agent Archetypes' : 'Архетипы AI Агентов'}
           </Link>
           <Link 
             to="/industries" 
             className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname.startsWith('/industries') ? 'text-primary' : 'text-foreground/60'}`}
           >
-            Industries
+            {language === 'en' ? 'Industries' : 'Индустрии'}
           </Link>
           <Link to="https://t.me/ruhunt" target="_blank" rel="noreferrer" className="text-sm font-medium transition-colors hover:text-primary">
             Telegram
           </Link>
+          <a href="https://aiix.pro" target="_blank" rel="noreferrer" className="text-sm font-medium transition-colors px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+            {language === 'en' ? 'Order Project' : 'Заказать проект'}
+          </a>
         </nav>
         
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="md:hidden">
             <Search className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={toggleLanguage}>
+            <Globe className="h-5 w-5" />
+            <span className="sr-only">
+              {language === 'en' ? 'Switch to Russian' : 'Переключить на английский'}
+            </span>
           </Button>
           <ThemeToggle />
           <Button 
@@ -82,21 +93,21 @@ export function Navbar() {
               className={`px-2 py-2 rounded-md text-sm font-medium transition-all hover:bg-muted ${location.pathname === '/' ? 'text-primary bg-muted' : ''}`}
               onClick={() => setIsOpen(false)}
             >
-              Home
+              {language === 'en' ? 'Home' : 'Главная'}
             </Link>
             <Link 
               to="/archetypes" 
               className={`px-2 py-2 rounded-md text-sm font-medium transition-all hover:bg-muted ${location.pathname.startsWith('/archetypes') ? 'text-primary bg-muted' : ''}`}
               onClick={() => setIsOpen(false)}
             >
-              AI Agent Archetypes
+              {language === 'en' ? 'AI Agent Archetypes' : 'Архетипы AI Агентов'}
             </Link>
             <Link 
               to="/industries" 
               className={`px-2 py-2 rounded-md text-sm font-medium transition-all hover:bg-muted ${location.pathname.startsWith('/industries') ? 'text-primary bg-muted' : ''}`}
               onClick={() => setIsOpen(false)}
             >
-              Industries
+              {language === 'en' ? 'Industries' : 'Индустрии'}
             </Link>
             <Link 
               to="https://t.me/ruhunt" 
@@ -107,6 +118,15 @@ export function Navbar() {
             >
               Telegram
             </Link>
+            <a 
+              href="https://aiix.pro" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="px-2 py-2 rounded-md text-sm font-medium transition-all hover:bg-muted text-primary"
+              onClick={() => setIsOpen(false)}
+            >
+              {language === 'en' ? 'Order Project' : 'Заказать проект'}
+            </a>
             <div className="flex items-center justify-between border-t pt-4 mt-2">
               <span className="text-sm text-muted-foreground">© 2024 CL</span>
               <a 
