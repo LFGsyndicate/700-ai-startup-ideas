@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import { getDocumentMetadata, getAllIdeas } from '@/data/mock-data';
 import { AgentArchetype, Industry, StartupIdea } from '@/types';
 import { Button } from '@/components/ui/button';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { useLanguage } from '@/hooks/use-language';
+import { DataCharts } from '@/components/visualizations/DataCharts';
+import { IntroSection } from '@/components/visualizations/IntroSection';
 
 export default function HomePage() {
   const [ideas, setIdeas] = useState<StartupIdea[]>([]);
-  const { title, author, telegramLink, introduction } = getDocumentMetadata();
+  const { title, author, telegramLink } = getDocumentMetadata();
   const { t } = useLanguage();
   
   useEffect(() => {
@@ -21,19 +22,6 @@ export default function HomePage() {
     
     fetchData();
   }, []);
-  
-  // Data for visualizations
-  const industryData = Object.values(Industry).map(industry => {
-    const count = ideas.filter(idea => idea.industry === industry).length;
-    return { name: industry.split(' & ')[0], value: count };
-  });
-  
-  const archetypeData = Object.values(AgentArchetype).map(archetype => {
-    const count = ideas.filter(idea => idea.archetype === archetype).length;
-    return { name: archetype.split(' ')[0], value: count };
-  });
-  
-  const COLORS = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#ECFDF5', '#059669', '#047857', '#065F46', '#064E3B', '#022C22'];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -78,29 +66,23 @@ export default function HomePage() {
       <section className="content-section">
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 md:grid-cols-2 md:gap-16">
-            <div className="space-y-4">
-              <h2 className="section-title">{t('home.revolution')}</h2>
-              <p className="text-gray-700 dark:text-gray-300">
-                {introduction}
-              </p>
-              <div className="flex gap-4">
-                <Button asChild variant="link" className="p-0 text-primary">
-                  <a href={telegramLink} target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
-                    {t('home.join_telegram')}
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </Button>
-              </div>
-            </div>
+            <IntroSection />
             
             {/* Visualization */}
             <div className="glass-card p-6 card-hover">
               <h3 className="text-lg font-medium mb-4">{t('home.ideas_by_archetype')}</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={archetypeData} layout="vertical">
+                  <BarChart data={ideas.length > 0 ? Object.values(AgentArchetype).map(archetype => {
+                    const count = ideas.filter(idea => idea.archetype === archetype).length;
+                    return { 
+                      name: archetype.split(' ')[0],
+                      displayName: t(`archetype.${archetype.split(' ')[0].toLowerCase()}`),
+                      value: count 
+                    };
+                  }) : []} layout="vertical">
                     <XAxis type="number" />
-                    <YAxis type="category" dataKey="name" />
+                    <YAxis type="category" dataKey="displayName" width={80} />
                     <Tooltip 
                       contentStyle={{
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -108,11 +90,17 @@ export default function HomePage() {
                         borderRadius: '0.5rem',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
                       }}
+                      formatter={(value) => [value, t('home.ideas_count')]}
                     />
                     <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                      {archetypeData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      {ideas.length > 0 && Object.values(AgentArchetype).map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#ECFDF5'][index % 6]} />
                       ))}
+                      <LabelList 
+                        dataKey="value"
+                        position="right"
+                        style={{ fill: '#0f172a', fontSize: 12, fontWeight: 500 }}
+                      />
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
@@ -196,35 +184,10 @@ export default function HomePage() {
               {t('home.distribution_description')}
             </p>
           </div>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-8">
-            <div className="w-full md:w-1/2 h-72 glass-card p-6 card-hover">
-              <h3 className="text-lg font-medium mb-4 text-center">{t('home.distribution_by_industry')}</h3>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={industryData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#10B981"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {industryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                      borderColor: '#10B981',
-                      borderRadius: '0.5rem',
-                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+          
+          {/* Data Charts Section */}
+          <div className="mt-8">
+            <DataCharts ideas={ideas} />
           </div>
         </div>
       </section>

@@ -5,7 +5,8 @@
 
 @layer base {
   :root {
-    --background: 113 70% 98%;
+    /* Brighter green theme based on the reference image */
+    --background: 142 75% 95%;
     --foreground: 120 10% 10%;
     
     --card: 0 0% 100%;
@@ -122,5 +123,47 @@
   
   .card-hover {
     @apply transition-all hover:shadow-lg hover:-translate-y-1 hover:border-primary/50;
+  }
+
+  /* Improved recharts styling */
+  .recharts-wrapper .recharts-cartesian-grid-horizontal line,
+  .recharts-wrapper .recharts-cartesian-grid-vertical line {
+    @apply stroke-black/10 dark:stroke-white/10;
+  }
+
+  .recharts-wrapper .recharts-pie path,
+  .recharts-wrapper .recharts-bar path {
+    @apply stroke-white/30 dark:stroke-black/20 stroke-[1];
+  }
+
+  .recharts-tooltip-wrapper {
+    @apply z-50;
+  }
+
+  .recharts-wrapper text {
+    @apply fill-black dark:fill-white text-xs md:text-sm;
+  }
+
+  .recharts-pie .recharts-label {
+    @apply font-medium fill-black dark:fill-white;
+  }
+  
+  .recharts-label-list text {
+    @apply font-medium fill-black dark:fill-white;
+  }
+
+  /* Ensure text in visualization is readable */
+  .recharts-text {
+    @apply fill-black dark:fill-white text-opacity-80 dark:text-opacity-80;
+  }
+
+  /* Enhanced look for the green background */
+  .bright-green-bg {
+    background-color: #4ade80; /* From the reference image */
+  }
+  
+  /* Improved chart text visibility */
+  .chart-text-enhanced {
+    @apply text-gray-900 dark:text-gray-100 font-medium text-sm md:text-base;
   }
 }
