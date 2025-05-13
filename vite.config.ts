@@ -2,36 +2,45 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import componentTagger from "lovable-tagger"; // Ваш кастомный плагин
+// УДАЛИТЕ статический импорт: import componentTagger from "lovable-tagger";
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => { // Обратите внимание: функция теперь async
   const isProduction = mode === 'production';
-  // Для GitHub Pages base должен быть именем вашего репозитория.
-  // Мы передадим это через BASE_URL в GitHub Actions.
   const base = process.env.BASE_URL || (isProduction ? '/700-ai-startup-ideas/' : '/');
 
+  const plugins = [
+    react(),
+  ];
+
+  // Условно и динамически импортируем lovable-tagger только в режиме разработки
+  if (!isProduction) {
+    try {
+      // Динамически импортируем модуль
+      const lovableTaggerModule = await import("lovable-tagger");
+      // Получаем экспорт по умолчанию (это функция плагина)
+      const componentTagger = lovableTaggerModule.default;
+
+      if (typeof componentTagger === 'function') {
+        plugins.push(componentTagger()); // Вызываем функцию, чтобы получить экземпляр плагина
+      } else {
+        console.warn("lovable-tagger был импортирован, но не предоставил функцию экспорта по умолчанию.");
+      }
+    } catch (error) {
+      console.warn("Не удалось загрузить lovable-tagger для разработки. Продолжаем без него.", error);
+    }
+  }
+
   return {
-    base: base, // <--- КРИТИЧЕСКИ ВАЖНО!
+    base: base,
     server: {
       host: "::",
       port: 8080,
     },
-    plugins: [
-      react(),
-      // Если componentTagger - это плагин только для разработки,
-      // лучше включать его условно, чтобы он не влиял на продакшн сборку.
-      // Если он нужен и в проде, уберите `!isProduction &&`.
-      !isProduction && componentTagger(),
-    ].filter(Boolean), // Удаляет falsey значения из массива плагинов (если componentTagger не включен)
+    plugins: plugins,
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
     },
-    // Опционально, если вы хотите, чтобы папка сборки называлась 'docs'
-    // (некоторые предпочитают для GitHub Pages, но с Actions это не обязательно)
-    // build: {
-    //   outDir: 'docs'
-    // }
   };
 });
