@@ -6,12 +6,14 @@ import { AgentArchetype, StartupIdea } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink } from 'lucide-react';
+import { useLanguage } from '@/hooks/use-language';
 
 export default function ArchetypeDetailPage() {
   const { archetype } = useParams<{ archetype: string }>();
   const [description, setDescription] = useState<string>("");
   const [ideas, setIdeas] = useState<StartupIdea[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const { t } = useLanguage();
   
   useEffect(() => {
     if (archetype) {
@@ -36,10 +38,10 @@ export default function ArchetypeDetailPage() {
             to="/archetypes" 
             className="text-sm text-muted-foreground hover:text-primary transition-colors mb-2 inline-block"
           >
-            ← Back to All Archetypes
+            ← {t('industries.back')}
           </Link>
           <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-2">
-            {archetype}
+            {archetype && t(`archetype.${(archetype as string).split(' ')[0].toLowerCase()}`)}
           </h1>
           <p className="text-lg text-gray-500 dark:text-gray-400 max-w-[900px]">
             {description}
@@ -49,7 +51,7 @@ export default function ArchetypeDetailPage() {
         <div className="flex items-center gap-4">
           <input
             type="text"
-            placeholder="Search ideas..."
+            placeholder={t('industry_detail.search_placeholder')}
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -59,7 +61,7 @@ export default function ArchetypeDetailPage() {
             onClick={() => setSearchTerm("")}
             disabled={!searchTerm}
           >
-            Clear
+            {t('industries.clear')}
           </Button>
         </div>
         
@@ -68,7 +70,7 @@ export default function ArchetypeDetailPage() {
             <Card key={idea.id} className="flex flex-col">
               <CardHeader>
                 <CardTitle>{idea.companyName}</CardTitle>
-                <CardDescription>{idea.industry}</CardDescription>
+                <CardDescription>{t(`industry.${idea.industry.split(' & ')[0].toLowerCase()}`)}</CardDescription>
               </CardHeader>
               <CardContent className="flex-1">
                 <p>{idea.description}</p>
@@ -80,7 +82,7 @@ export default function ArchetypeDetailPage() {
                   rel="noreferrer" 
                   className="inline-flex items-center gap-2 text-primary hover:underline"
                 >
-                  Visit Website <ExternalLink className="h-4 w-4" />
+                  {t('industry_detail.visit_website')} <ExternalLink className="h-4 w-4" />
                 </a>
               </CardFooter>
             </Card>
@@ -88,10 +90,10 @@ export default function ArchetypeDetailPage() {
           
           {filteredIdeas.length === 0 && (
             <div className="col-span-full text-center py-8">
-              <p className="text-muted-foreground">No ideas found matching your search.</p>
+              <p className="text-muted-foreground">{t('industry_detail.no_results')}</p>
               {searchTerm && (
                 <Button variant="link" onClick={() => setSearchTerm("")}>
-                  Clear Search
+                  {t('industries.clear')}
                 </Button>
               )}
             </div>

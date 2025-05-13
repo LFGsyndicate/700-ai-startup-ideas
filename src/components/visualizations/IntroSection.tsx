@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 export function IntroSection() {
   const { introduction, telegramLink } = getDocumentMetadata();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="glass-card p-6 card-hover space-y-4 border border-primary/30">
@@ -16,7 +16,7 @@ export function IntroSection() {
       
       <div className="prose prose-green max-w-none dark:prose-invert">
         <p className="text-gray-800 dark:text-gray-300">
-          {introduction}
+          {language === "en" ? introduction : t('home.introduction_full')}
         </p>
       </div>
       
