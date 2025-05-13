@@ -1,247 +1,123 @@
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState } from 'react';
 
-type Language = 'en' | 'ru';
-
-interface LanguageContextType {
-  language: Language;
-  toggleLanguage: () => void;
-  t: (key: string) => string;
-}
-
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-// English and Russian translations
-const translations: Record<Language, Record<string, string>> = {
+// Add language definitions for English and Russian
+const translations = {
   en: {
-    // General
-    'app.title': '700 AI Startup Ideas',
-    'app.subtitle': 'A Compendium of Real-World Generative AI Applications',
-    'app.author': 'By CL',
-    
-    // Navigation
+    'app.author': 'Author: CL',
+    'home.introduction': 'A comprehensive industry analysis of 700 real-world generative AI applications, providing insights into how this technology is transforming businesses across sectors.',
+    'home.revolution': 'The Generative AI Revolution',
+    'home.key_agent_types': 'Key AI Agent Archetypes',
+    'home.agent_types_description': 'Explore the six principal AI agent archetypes that are transforming organizations across industries.',
+    'home.startup_ideas': 'startup ideas',
+    'home.explore_agent_types': 'Explore All Agent Types',
+    'home.industry_breakdown': 'Industry Breakdown',
+    'home.industry_description': 'Discover how generative AI is being applied across different sectors of the economy.',
+    'home.view_all_industries': 'View All Industries',
+    'home.ideas_by_archetype': 'AI Ideas by Agent Type',
+    'home.distribution': 'Distribution of AI Applications',
+    'home.distribution_description': 'Visualize the distribution of generative AI applications across industries and agent archetypes.',
+    'home.distribution_by_industry': 'Distribution by Industry',
+    'home.ideas_count': 'AI Applications',
+    'home.ready': 'Ready to Explore?',
+    'home.ready_description': 'Dive into our comprehensive collection of 700 real-world generative AI applications across industries.',
+    'home.help_telegram': 'Help in Telegram',
+    'home.join_telegram': 'Help in Telegram',
     'nav.home': 'Home',
     'nav.archetypes': 'AI Agent Archetypes',
     'nav.industries': 'Industries',
-    'nav.order': 'Order Project',
-    
-    // Footer
-    'footer.rights': '© 2025 CL. All rights reserved.',
-    'footer.tagline': '700 AI Startup Ideas: A Compendium of Real-World Generative AI Applications',
     'footer.navigation': 'Navigation',
     'footer.contact': 'Contact',
-    
-    // Archetypes
     'archetype.customer': 'Customer Agent',
     'archetype.employee': 'Employee Agent',
     'archetype.creative': 'Creative Agent',
     'archetype.code': 'Code Agent',
     'archetype.data': 'Data Agent',
     'archetype.security': 'Security Agent',
-    
-    // Industries
-    'industry.sales': 'Sales & Marketing',
-    'industry.hr': 'HR & Recruiting',
-    'industry.finance': 'Finance & Accounting',
-    'industry.legal': 'Legal',
-    'industry.healthcare': 'Healthcare',
-    'industry.education': 'Education',
-    'industry.realestate': 'Real Estate',
+    'industry.automotive': 'Automotive & Logistics',
+    'industry.financial': 'Financial Services & Insurance',
+    'industry.healthcare': 'Healthcare & Pharmaceuticals',
+    'industry.manufacturing': 'Manufacturing & Electronics',
+    'industry.retail': 'Retail & E-commerce',
     'industry.media': 'Media & Entertainment',
-    'industry.manufacturing': 'Manufacturing & Logistics',
-    'industry.retail': 'Retail & eCommerce',
-    'industry.other': 'Cross-Industry & Other',
-    
-    // Home page
-    'home.introduction': 'A comprehensive collection of real-world generative AI applications and startup opportunities across various industries.',
-    'home.revolution': 'The Generative AI Revolution',
-    'home.join_telegram': 'Join our Telegram',
-    'home.ideas_by_archetype': 'Ideas by Agent Archetype',
-    'home.key_agent_types': 'The Six Key AI Agent Archetypes',
-    'home.agent_types_description': 'Every GenAI startup can be categorized into one of these six fundamental agent types.',
-    'home.startup_ideas': 'startup ideas',
-    'home.explore_agent_types': 'Explore All Agent Types',
-    'home.industry_breakdown': 'Industry-by-Industry Breakdown',
-    'home.industry_description': 'Discover AI startup opportunities across these major industry sectors.',
-    'home.view_all_industries': 'View All Industries',
-    'home.distribution': 'Distribution of AI Startup Ideas',
-    'home.distribution_description': 'Visualize the spread of AI applications across different industries.',
-    'home.distribution_by_industry': 'Distribution by Industry',
-    'home.ready': 'Ready to Explore AI Startup Opportunities?',
-    'home.ready_description': 'Dive into our comprehensive collection of generative AI applications and find inspiration for your next venture.',
-    
-    // Industries Page
-    'industries.title': 'Industries',
-    'industries.description': 'Explore AI startup opportunities across different industry sectors, each with unique challenges and opportunities for generative AI applications.',
-    'industries.search_placeholder': 'Search industries...',
-    'industries.clear': 'Clear',
-    'industries.applications_title': 'Industry-Specific AI Applications',
-    'industries.applications_desc1': 'Each industry presents unique opportunities for applying generative AI to solve specific challenges. By exploring these industry-specific applications, entrepreneurs can identify gaps in the market and develop tailored solutions.',
-    'industries.applications_desc2': 'From revolutionizing customer service in retail to transforming diagnostic processes in healthcare, generative AI is creating unprecedented opportunities across all sectors of the economy.',
-    'industries.browse_archetypes': 'Browse by AI Agent Type Instead',
-    'industries.no_results': 'No industries found matching your search.',
-    
-    // Industry Detail Page
-    'industry_detail.back': '← Back to All Industries',
-    'industry_detail.search_placeholder': 'Search ideas...',
-    'industry_detail.all': 'All',
-    'industry_detail.visit_website': 'Visit Website',
-    'industry_detail.no_results': 'No ideas found matching your search.',
-    
-    // Archetypes Page
-    'archetypes.title': 'AI Agent Archetypes',
-    'archetypes.description': 'Explore the six fundamental AI agent types that form the backbone of generative AI applications across all industries.',
-    'archetypes.search_placeholder': 'Search archetypes...',
-    'archetypes.no_results': 'No archetypes found matching your search.',
-    'archetypes.applications_title': 'Understanding AI Agent Archetypes',
-    'archetypes.applications_desc': 'Each AI agent type specializes in different tasks and capabilities. Understanding these archetypes helps entrepreneurs identify the most suitable AI approach for their specific business challenges.',
-    'archetypes.browse_industries': 'Browse by Industry Instead',
-    
-    // Archetype Detail Page
-    'archetype_detail.back': '← Back to All Archetypes',
-    'archetype_detail.search_placeholder': 'Search ideas...',
-    'archetype_detail.all': 'All',
-    'archetype_detail.visit_website': 'Visit Website',
-    'archetype_detail.no_results': 'No ideas found matching your search.',
-    
-    // Not Found Page
-    'notfound.title': 'Page Not Found',
-    'notfound.description': 'Sorry, the page you are looking for does not exist or has been moved.',
-    'notfound.back_home': 'Go back home'
+    'industry.telecom': 'Telecom & Technology',
+    'industry.energy': 'Energy & Utilities',
+    'industry.government': 'Government & Public Sector',
+    'industry.education': 'Education & Research',
+    'industry.travel': 'Travel & Hospitality',
   },
   ru: {
-    // General
-    'app.title': '700 идей AI-стартапов',
-    'app.subtitle': 'Сборник реальных приложений генеративного ИИ',
     'app.author': 'Автор: CL',
-    
-    // Navigation
+    'home.introduction': 'Комплексный отраслевой анализ 700 реальных примеров применения генеративного ИИ, дающий представление о том, как эта технология трансформирует бизнес в различных секторах.',
+    'home.revolution': 'Революция Генеративного ИИ',
+    'home.key_agent_types': 'Ключевые Архетипы AI Агентов',
+    'home.agent_types_description': 'Изучите шесть основных архетипов ИИ-агентов, которые трансформируют организации в различных отраслях.',
+    'home.startup_ideas': 'идей стартапов',
+    'home.explore_agent_types': 'Изучить Все Типы Агентов',
+    'home.industry_breakdown': 'Анализ По Индустриям',
+    'home.industry_description': 'Узнайте, как генеративный ИИ применяется в различных секторах экономики.',
+    'home.view_all_industries': 'Просмотреть Все Индустрии',
+    'home.ideas_by_archetype': 'AI Идеи по Типу Агента',
+    'home.distribution': 'Распределение AI Приложений',
+    'home.distribution_description': 'Визуализация распределения приложений генеративного ИИ по отраслям и архетипам агентов.',
+    'home.distribution_by_industry': 'Распределение по Индустриям',
+    'home.ideas_count': 'AI Приложений',
+    'home.ready': 'Готовы Изучать?',
+    'home.ready_description': 'Погрузитесь в нашу комплексную коллекцию из 700 реальных приложений генеративного ИИ в различных отраслях.',
+    'home.help_telegram': 'Помощь в Telegram',
+    'home.join_telegram': 'Помощь в Telegram',
     'nav.home': 'Главная',
     'nav.archetypes': 'Архетипы AI Агентов',
     'nav.industries': 'Индустрии',
-    'nav.order': 'Заказать проект',
-    
-    // Footer
-    'footer.rights': '© 2025 CL. Все права защищены.',
-    'footer.tagline': '700 идей AI-стартапов: Сборник реальных приложений генеративного ИИ',
     'footer.navigation': 'Навигация',
     'footer.contact': 'Контакты',
-    
-    // Archetypes
-    'archetype.customer': 'Клиентский агент',
-    'archetype.employee': 'Агент-сотрудник',
-    'archetype.creative': 'Креативный агент',
-    'archetype.code': 'Код-агент',
-    'archetype.data': 'Дата-агент',
-    'archetype.security': 'Агент безопасности',
-    
-    // Industries
-    'industry.sales': 'Продажи и Маркетинг',
-    'industry.hr': 'HR и Рекрутинг',
-    'industry.finance': 'Финансы и Бухгалтерия',
-    'industry.legal': 'Юриспруденция',
-    'industry.healthcare': 'Здравоохранение',
-    'industry.education': 'Образование',
-    'industry.realestate': 'Недвижимость',
+    'archetype.customer': 'Агент для Клиентов',
+    'archetype.employee': 'Агент для Сотрудников',
+    'archetype.creative': 'Креативный Агент',
+    'archetype.code': 'Агент Кода',
+    'archetype.data': 'Агент Данных',
+    'archetype.security': 'Агент Безопасности',
+    'industry.automotive': 'Автомобильная и Логистика',
+    'industry.financial': 'Финансовые Услуги и Страхование',
+    'industry.healthcare': 'Здравоохранение и Фармацевтика',
+    'industry.manufacturing': 'Производство и Электроника',
+    'industry.retail': 'Розничная Торговля и Э-коммерция',
     'industry.media': 'Медиа и Развлечения',
-    'industry.manufacturing': 'Производство и Логистика',
-    'industry.retail': 'Розничная торговля и eCommerce',
-    'industry.other': 'Кросс-индустриальные и Другие',
-    
-    // Home page
-    'home.introduction': 'Комплексная коллекция реальных применений генеративного ИИ и возможностей для стартапов в различных отраслях.',
-    'home.revolution': 'Революция генеративного ИИ',
-    'home.join_telegram': 'Присоединяйтесь к Telegram',
-    'home.ideas_by_archetype': 'Идеи по архетипу агента',
-    'home.key_agent_types': 'Шесть ключевых архетипов AI агентов',
-    'home.agent_types_description': 'Каждый GenAI стартап можно отнести к одному из этих шести фундаментальных типов агентов.',
-    'home.startup_ideas': 'идей для стартапа',
-    'home.explore_agent_types': 'Исследовать все типы агентов',
-    'home.industry_breakdown': 'Разбивка по отраслям',
-    'home.industry_description': 'Откройте для себя возможности AI-стартапов в этих основных отраслевых секторах.',
-    'home.view_all_industries': 'Просмотреть все индустрии',
-    'home.distribution': 'Распределение идей AI-стартапов',
-    'home.distribution_description': 'Визуализируйте распространение AI-приложений в различных отраслях.',
-    'home.distribution_by_industry': 'Распределение по отраслям',
-    'home.ready': 'Готовы изучить возможности AI-стартапов?',
-    'home.ready_description': 'Погрузитесь в нашу обширную коллекцию приложений генеративного ИИ и найдите вдохновение для вашего следующего проекта.',
-    
-    // Industries Page
-    'industries.title': 'Индустрии',
-    'industries.description': 'Исследуйте возможности AI-стартапов в различных отраслях, каждая из которых имеет уникальные проблемы и возможности для приложений генеративного ИИ.',
-    'industries.search_placeholder': 'Поиск индустрий...',
-    'industries.clear': 'Очистить',
-    'industries.applications_title': 'Отраслевые AI-приложения',
-    'industries.applications_desc1': 'Каждая отрасль представляет уникальные возможности для применения генеративного ИИ для решения конкретных задач. Изучая эти отраслевые приложения, предприниматели могут выявить пробелы на рынке и разработать адаптированные решения.',
-    'industries.applications_desc2': 'От революции в обслуживании клиентов в розничной торговле до трансформации диагностических процессов в здравоохранении, генеративный ИИ создает беспрецедентные возможности во всех секторах экономики.',
-    'industries.browse_archetypes': 'Просматривать по типу AI агента',
-    'industries.no_results': 'Отрасли, соответствующие вашему запросу, не найдены.',
-    
-    // Industry Detail Page
-    'industry_detail.back': '← Назад ко всем индустриям',
-    'industry_detail.search_placeholder': 'Поиск идей...',
-    'industry_detail.all': 'Все',
-    'industry_detail.visit_website': 'Посетить сайт',
-    'industry_detail.no_results': 'Не найдено идей, соответствующих вашему запросу.',
-    
-    // Archetypes Page
-    'archetypes.title': 'Архетипы AI агентов',
-    'archetypes.description': 'Исследуйте шесть фундаментальных типов AI агентов, которые составляют основу приложений генеративного ИИ во всех отраслях.',
-    'archetypes.search_placeholder': 'Поиск архетипов...',
-    'archetypes.no_results': 'Архетипы, соответствующие вашему запросу, не найдены.',
-    'archetypes.applications_title': 'Понимание архетипов AI агентов',
-    'archetypes.applications_desc': 'Каждый тип AI агента специализируется на различных задачах и возможностях. Понимание этих архетипов помогает предпринимателям определить наиболее подходящий AI-подход для их конкретных бизнес-задач.',
-    'archetypes.browse_industries': 'Просматривать по отраслям',
-    
-    // Archetype Detail Page
-    'archetype_detail.back': '← Назад ко всем архетипам',
-    'archetype_detail.search_placeholder': 'Поиск идей...',
-    'archetype_detail.all': 'Все',
-    'archetype_detail.visit_website': 'Посетить сайт',
-    'archetype_detail.no_results': 'Не найдено идей, соответствующих вашему запросу.',
-    
-    // Not Found Page
-    'notfound.title': 'Страница не найдена',
-    'notfound.description': 'Извините, страница, которую вы ищете, не существует или была перемещена.',
-    'notfound.back_home': 'Вернуться на главную'
+    'industry.telecom': 'Телекоммуникации и Технологии',
+    'industry.energy': 'Энергетика и Коммунальные Услуги',
+    'industry.government': 'Государственный и Общественный Сектор',
+    'industry.education': 'Образование и Исследования',
+    'industry.travel': 'Путешествия и Гостиничный Бизнес',
   }
 };
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  // Get initial language from localStorage or default to 'en'
-  const [language, setLanguage] = useState<Language>(
-    () => (localStorage.getItem('language') as Language) || 'en'
-  );
+type LanguageContextType = {
+  language: string;
+  toggleLanguage: () => void;
+  t: (key: string) => string;
+};
 
-  useEffect(() => {
-    // Save language preference to localStorage whenever it changes
-    localStorage.setItem('language', language);
-    // Update HTML lang attribute
-    document.documentElement.lang = language;
-  }, [language]);
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
+  const [language, setLanguage] = useState('en'); // Default language is English
 
   const toggleLanguage = () => {
-    setLanguage(prevLang => (prevLang === 'en' ? 'ru' : 'en'));
+    setLanguage(language === 'en' ? 'ru' : 'en');
   };
 
-  const t = (key: string): string => {
-    return translations[language][key] || key;
-  };
-
-  const value = {
-    language,
-    toggleLanguage,
-    t
+  const t = (key: string) => {
+    return translations[language as keyof typeof translations][key as keyof typeof translations[keyof typeof translations]] || key;
   };
 
   return (
-    <LanguageContext.Provider value={value}>
+    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
 };
 
-export const useLanguage = (): LanguageContextType => {
+export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
     throw new Error('useLanguage must be used within a LanguageProvider');

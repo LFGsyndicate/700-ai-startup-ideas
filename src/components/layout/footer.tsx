@@ -29,7 +29,7 @@ export function Footer() {
                 <MessageCircle className="h-5 w-5" />
               </a>
               <a 
-                href="https://github.com" 
+                href="https://github.com/lfgsyndicate/700-ai-startup-ideas" 
                 target="_blank" 
                 rel="noreferrer" 
                 className="text-muted-foreground hover:text-primary transition-colors"

@@ -211,7 +211,7 @@ export default function HomePage() {
                 <Link to="/industries">{t('nav.industries')}</Link>
               </Button>
               <Button asChild variant="outline" className="border-white text-white hover:bg-white/20">
-                <a href={telegramLink} target="_blank" rel="noreferrer">{t('home.join_telegram')}</a>
+                <a href={telegramLink} target="_blank" rel="noreferrer">{t('home.help_telegram')}</a>
               </Button>
             </div>
           </div>

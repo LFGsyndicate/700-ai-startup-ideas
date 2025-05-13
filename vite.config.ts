@@ -1,3 +1,4 @@
+
 // vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
@@ -6,7 +7,7 @@ import path from "path";
 
 export default defineConfig(async ({ mode }) => { // Обратите внимание: функция теперь async
   const isProduction = mode === 'production';
-  const base = process.env.BASE_URL || (isProduction ? '/700-ai-startup-ideas/' : '/');
+  const base = process.env.BASE_URL || '/700-ai-startup-ideas/';
 
   const plugins = [
     react(),
