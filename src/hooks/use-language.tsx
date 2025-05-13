@@ -45,6 +45,13 @@ const translations = {
     'industry.government': 'Government & Public Sector',
     'industry.education': 'Education & Research',
     'industry.travel': 'Travel & Hospitality',
+    'industry.sales': 'Sales',
+    'industry.hr': 'HR',
+    'industry.finance': 'Finance',
+    'industry.legal': 'Legal',
+    'industry.real': 'Real Estate',
+    'industry.cross': 'Cross Industry',
+    'industries.browse_archetypes': 'Browse Types',
   },
   ru: {
     'app.author': 'Автор: CL',
@@ -88,6 +95,13 @@ const translations = {
     'industry.government': 'Государственный и Общественный Сектор',
     'industry.education': 'Образование и Исследования',
     'industry.travel': 'Путешествия и Гостиничный Бизнес',
+    'industry.sales': 'Продажи',
+    'industry.hr': 'HR',
+    'industry.finance': 'Финансы',
+    'industry.legal': 'Юридические услуги',
+    'industry.real': 'Недвижимость',
+    'industry.cross': 'Кросс-индустрия',
+    'industries.browse_archetypes': 'Просмотр Типов',
   }
 };
 

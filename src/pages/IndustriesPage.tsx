@@ -86,21 +86,12 @@ export default function IndustriesPage() {
         </div>
         
         <div className="pt-8 border-t border-primary/10">
-          <h2 className="section-title mb-4">{t('industries.applications_title')}</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            {t('industries.applications_desc1')}
-          </p>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
-            {t('industries.applications_desc2')}
-          </p>
-          <div className="mt-6">
-            <Button asChild className="bg-primary hover:bg-primary/90">
-              <Link to="/archetypes" className="flex items-center gap-2">
-                {t('industries.browse_archetypes')}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+          <Button asChild className="bg-primary hover:bg-primary/90">
+            <Link to="/archetypes" className="flex items-center gap-2">
+              {t('industries.browse_archetypes')}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

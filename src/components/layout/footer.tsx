@@ -29,7 +29,7 @@ export function Footer() {
                 <MessageCircle className="h-5 w-5" />
               </a>
               <a 
-                href="https://github.com/lfgsyndicate/700-ai-startup-ideas" 
+                href="https://github.com/LFGsyndicate/700-ai-startup-ideas" 
                 target="_blank" 
                 rel="noreferrer" 
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -85,7 +85,7 @@ export function Footer() {
         
         <div className="border-t mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            {language === 'en' ? '© 2024 CL. All rights reserved.' : '© 2024 CL. Все права защищены.'}
+            {language === 'en' ? '© 2025 aiix.pro. All rights reserved.' : '© 2025 aiix.pro. Все права защищены.'}
           </p>
           <div className="text-sm text-muted-foreground">
             {language === 'en' 

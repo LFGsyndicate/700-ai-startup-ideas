@@ -21,7 +21,7 @@ export function IntroSection() {
       </div>
       
       <div className="flex gap-4">
-        <Button asChild variant="outline" size="sm" className="border-primary/20 hover:border-primary/50 bg-white/50 dark:bg-gray-900/40 hover:bg-white/70 dark:hover:bg-gray-900/60 text-primary">
+        <Button asChild variant="outline" size="sm" className="border-primary/20 hover:border-primary/50 bg-transparent text-primary">
           <a href={telegramLink} target="_blank" rel="noreferrer" className="flex items-center gap-1">
             {t('home.help_telegram')}
             <ExternalLink className="h-3 w-3" />
