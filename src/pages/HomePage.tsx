@@ -8,6 +8,10 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 import { useLanguage } from '@/hooks/use-language';
 import { DataCharts } from '@/components/visualizations/DataCharts';
 import { IntroSection } from '@/components/visualizations/IntroSection';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
+  Cell, LabelList, ResponsiveContainer
+} from 'recharts';
 
 export default function HomePage() {
   const [ideas, setIdeas] = useState<StartupIdea[]>([]);
