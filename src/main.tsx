@@ -11,3 +11,6 @@ if (!rootElement) {
 
 // Render the app
 createRoot(rootElement).render(<App />);
+
+// Log confirmation of successful rendering
+console.log("Application successfully rendered");

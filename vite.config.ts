@@ -15,14 +15,17 @@ export default defineConfig(async ({ mode }) => {
   // Conditionally import lovable-tagger only in development mode
   if (!isProduction) {
     try {
-      // Dynamic import of the module
-      const lovableTaggerModule = await import("lovable-tagger");
-      // Check what's actually available in the module
-      const componentTagger = lovableTaggerModule.default || lovableTaggerModule;
+      // Dynamic import of the module with proper TypeScript handling
+      const lovableTaggerModule = await import("lovable-tagger") as any;
       
-      // If it's a function, add it to plugins
-      if (typeof componentTagger === 'function') {
-        plugins.push(componentTagger());
+      // Check if the module itself is a function or if it has a default export
+      const taggerFunction = typeof lovableTaggerModule === 'function' 
+        ? lovableTaggerModule 
+        : lovableTaggerModule.default;
+      
+      // Add to plugins only if we found a valid function
+      if (typeof taggerFunction === 'function') {
+        plugins.push(taggerFunction());
       } else {
         console.warn("lovable-tagger was imported but did not provide a usable plugin function.");
       }

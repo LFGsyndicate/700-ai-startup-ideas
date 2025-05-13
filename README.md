@@ -19,6 +19,15 @@ This project showcases 700 verified AI use cases categorized by industry sectors
 
 Visit the live site: [700 AI Startup Ideas](https://lfgsyndicate.github.io/700-ai-startup-ideas/)
 
+## Development
+
+This project is built with:
+- React + Vite
+- TypeScript
+- Tailwind CSS
+- Recharts for visualizations
+- React Router for navigation
+
 ## Contact
 
 For help and inquiries: [Telegram](https://t.me/ruhunt)
