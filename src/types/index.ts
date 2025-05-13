@@ -29,6 +29,7 @@ export interface StartupIdea {
   id: string;
   companyName: string;
   description: string;
+  descriptionRu?: string; // Добавляем русское описание
   link: string;
   archetype: AgentArchetype;
   industry: Industry;

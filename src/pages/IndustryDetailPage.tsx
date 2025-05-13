@@ -15,7 +15,7 @@ export default function IndustryDetailPage() {
   const [ideas, setIdeas] = useState<StartupIdea[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [activeArchetype, setActiveArchetype] = useState<string>("all");
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   useEffect(() => {
     if (industry) {
@@ -43,6 +43,16 @@ export default function IndustryDetailPage() {
     acc[archetype] = ideas.filter(idea => idea.archetype === archetype);
     return acc;
   }, {} as Record<string, StartupIdea[]>);
+
+  // Функция для получения локализованного описания компании
+  const getLocalizedDescription = (idea: StartupIdea) => {
+    // Если русский язык и есть русское описание, используем его
+    if (language === 'ru' && idea.descriptionRu) {
+      return idea.descriptionRu;
+    }
+    // Иначе используем оригинальное описание на английском
+    return idea.description;
+  };
   
   return (
     <div className="container px-4 py-8 md:py-12 md:px-6">
@@ -59,7 +69,7 @@ export default function IndustryDetailPage() {
             {industry && t(`industry.${(industry as string).split(' & ')[0].toLowerCase()}`)}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-[900px]">
-            {description}
+            {language === 'ru' ? t(`industry_description.${(industry as string).split(' & ')[0].toLowerCase()}`) : description}
           </p>
         </div>
         
@@ -122,7 +132,9 @@ export default function IndustryDetailPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="flex-1">
-                    <p className="text-gray-600 dark:text-gray-300">{idea.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {getLocalizedDescription(idea)}
+                    </p>
                   </CardContent>
                   <CardFooter className="border-t border-primary/5 pt-4">
                     <a 
@@ -165,7 +177,9 @@ export default function IndustryDetailPage() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="flex-1">
-                        <p className="text-gray-600 dark:text-gray-300">{idea.description}</p>
+                        <p className="text-gray-600 dark:text-gray-300">
+                          {getLocalizedDescription(idea)}
+                        </p>
                       </CardContent>
                       <CardFooter className="border-t border-primary/5 pt-4">
                         <a 
