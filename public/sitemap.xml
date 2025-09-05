@@ -6,13 +6,98 @@
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/archetypes</loc>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/archetypes</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/industries</loc>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/archetypes/Customer%20Agent</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/archetypes/Employee%20Agent</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/archetypes/Creative%20Agent</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/archetypes/Code%20Agent</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/archetypes/Data%20Agent</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/archetypes/Security%20Agent</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Sales%20%26%20Marketing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/HR%20%26%20Recruiting</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Finance%20%26%20Accounting</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Legal</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Healthcare</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Education</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Real%20Estate</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Media%20%26%20Entertainment</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Manufacturing%20%26%20Logistics</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Retail%20%26%20eCommerce</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lfgsyndicate.github.io/700-ai-startup-ideas/#/industries/Cross-Industry%20%26%20Other</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

@@ -31,3 +31,4 @@ fs.writeFileSync('public/dataset.csv', csv);
 console.log(`Экспортировано идей: ${ideas.length}`);
 
 
+
