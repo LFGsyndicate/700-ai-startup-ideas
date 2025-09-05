@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getDocumentMetadata } from '@/data/mock-data';
 import { Industry } from '@/types';
+import { industryKeyForLabel } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, X, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
+import { Helmet } from 'react-helmet-async';
 
 export default function IndustriesPage() {
   const { title } = getDocumentMetadata();
@@ -20,6 +22,10 @@ export default function IndustriesPage() {
   
   return (
     <div className="container px-4 py-8 md:py-12 md:px-6">
+      <Helmet>
+        <title>AI Startup Ideas by Industry - {title}</title>
+        <meta name="description" content="Explore generative AI startup ideas across various industries." />
+      </Helmet>
       <div className="flex flex-col space-y-6 md:space-y-8">
         <div>
           <h1 className="page-title mb-3">{t('industries.title')}</h1>
@@ -61,7 +67,7 @@ export default function IndustriesPage() {
           {filteredIndustries.map((industry) => (
             <Card key={industry} className="card-hover border-primary/10">
               <CardHeader>
-                <CardTitle>{t(`industry.${industry.split(' & ')[0].toLowerCase()}`)}</CardTitle>
+                <CardTitle>{t(`industry.${industryKeyForLabel(industry)}`)}</CardTitle>
                 <CardDescription>{t('home.explore_agent_types')}</CardDescription>
               </CardHeader>
               <CardContent>

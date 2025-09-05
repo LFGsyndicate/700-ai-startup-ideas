@@ -4,19 +4,21 @@ import { Link } from 'react-router-dom';
 import { getDocumentMetadata, getAllIdeas } from '@/data/mock-data';
 import { AgentArchetype, Industry, StartupIdea } from '@/types';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import { DataCharts } from '@/components/visualizations/DataCharts';
+import { formatApproxCount, industryKeyForLabel } from '@/lib/utils';
 import { IntroSection } from '@/components/visualizations/IntroSection';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
-  Cell, LabelList, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, Tooltip,
+  Cell, ResponsiveContainer
 } from 'recharts';
+import { Helmet } from 'react-helmet-async';
 
 export default function HomePage() {
   const [ideas, setIdeas] = useState<StartupIdea[]>([]);
   const { title, author, telegramLink } = getDocumentMetadata();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +31,32 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={t('home.introduction')} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://lfgsyndicate.github.io/700-ai-startup-ideas/",
+            "name": title,
+            "description": t('home.introduction'),
+            "author": {
+              "@type": "Person",
+              "name": author
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Lovable",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://lovable.dev/opengraph-image-p98pqg.png"
+              }
+            }
+          })}
+        </script>
+      </Helmet>
       {/* Hero section */}
       <section className="green-gradient py-16 md:py-24">
         <div className="container px-4 md:px-6">
@@ -94,17 +122,12 @@ export default function HomePage() {
                         borderRadius: '0.5rem',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
                       }}
-                      formatter={(value) => [value, t('home.ideas_count')]}
+                      formatter={(value) => [formatApproxCount(Number(value), language), '']}
                     />
                     <Bar dataKey="value" radius={[0, 4, 4, 0]}>
                       {ideas.length > 0 && Object.values(AgentArchetype).map((_, index) => (
                         <Cell key={`cell-${index}`} fill={['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#ECFDF5'][index % 6]} />
                       ))}
-                      <LabelList 
-                        dataKey="value"
-                        position="right"
-                        style={{ fill: '#0f172a', fontSize: 12, fontWeight: 500 }}
-                      />
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
@@ -135,7 +158,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-lg font-medium mb-2">{t(`archetype.${archetype.split(' ')[0].toLowerCase()}`)}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {ideas.filter(idea => idea.archetype === archetype).length} {t('home.startup_ideas')}
+                  {formatApproxCount(ideas.filter(idea => idea.archetype === archetype).length, language)}
                 </p>
               </Link>
             ))}
@@ -164,9 +187,9 @@ export default function HomePage() {
                 to={`/industries/${encodeURIComponent(industry)}`}
                 className="glass-card p-6 card-hover"
               >
-                <h3 className="text-lg font-medium mb-2">{t(`industry.${industry.split(' & ')[0].toLowerCase()}`)}</h3>
+                <h3 className="text-lg font-medium mb-2">{t(`industry.${industryKeyForLabel(industry)}`)}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {ideas.filter(idea => idea.industry === industry).length} {t('home.startup_ideas')}
+                  {formatApproxCount(ideas.filter(idea => idea.industry === industry).length, language)}
                 </p>
               </Link>
             ))}

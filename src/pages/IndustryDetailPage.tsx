@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ExternalLink, Search, X, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
+import { Helmet } from 'react-helmet-async';
 
 export default function IndustryDetailPage() {
   const { industry } = useParams<{ industry: string }>();
@@ -56,6 +57,10 @@ export default function IndustryDetailPage() {
   
   return (
     <div className="container px-4 py-8 md:py-12 md:px-6">
+      <Helmet>
+        <title>{`${industry} - AI Startup Ideas`}</title>
+        <meta name="description" content={`Explore startup ideas for the ${industry} industry.`} />
+      </Helmet>
       <div className="flex flex-col space-y-6 md:space-y-8">
         <div>
           <Link 
@@ -66,10 +71,10 @@ export default function IndustryDetailPage() {
             {t('industry_detail.back')}
           </Link>
           <h1 className="page-title mb-3">
-            {industry && t(`industry.${(industry as string).split(' & ')[0].toLowerCase()}`)}
+            {industry && t(`industry.${(industry as string).split(' & ')[0].toLowerCase().replace(/\s+/g, '_')}`)}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-[900px]">
-            {language === 'ru' ? t(`industry_description.${(industry as string).split(' & ')[0].toLowerCase()}`) : description}
+            {language === 'ru' ? t(`industry_description.${(industry as string).split(' & ')[0].toLowerCase().replace(/\s+/g, '_')}`) : description}
           </p>
         </div>
         
@@ -137,15 +142,17 @@ export default function IndustryDetailPage() {
                     </p>
                   </CardContent>
                   <CardFooter className="border-t border-primary/5 pt-4">
-                    <a 
-                      href={idea.link} 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                    >
-                      {t('industry_detail.visit_website')} 
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                    {idea.link && (
+                      <a 
+                        href={idea.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer nofollow" 
+                        className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                      >
+                        {t('industry_detail.visit_website')} 
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    )}
                   </CardFooter>
                 </Card>
               ))}
@@ -182,15 +189,17 @@ export default function IndustryDetailPage() {
                         </p>
                       </CardContent>
                       <CardFooter className="border-t border-primary/5 pt-4">
-                        <a 
-                          href={idea.link} 
-                          target="_blank" 
-                          rel="noreferrer" 
-                          className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                        >
-                          {t('industry_detail.visit_website')} 
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
+                        {idea.link && (
+                          <a 
+                            href={idea.link} 
+                            target="_blank" 
+                            rel="noopener noreferrer nofollow" 
+                            className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                          >
+                            {t('industry_detail.visit_website')} 
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        )}
                       </CardFooter>
                     </Card>
                   ))

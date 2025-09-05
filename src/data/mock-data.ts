@@ -69,7 +69,7 @@ function generateMockStartupIdeas(): StartupIdea[] {
           id: `idea-${id++}`,
           companyName,
           description: `An AI ${archetype} that helps businesses in the ${industry} industry by automating key processes and improving outcomes.`,
-          link: "https://example.com",
+          link: "#",
           archetype,
           industry
         });

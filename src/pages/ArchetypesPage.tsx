@@ -1,17 +1,31 @@
 
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getDocumentMetadata } from '@/data/mock-data';
+import { getDocumentMetadata, getAllIdeas } from '@/data/mock-data';
 import { AgentArchetype } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Helmet } from 'react-helmet-async';
+import { useEffect, useState } from 'react';
+import { formatApproxCount } from '@/lib/utils';
 
 export default function ArchetypesPage() {
   const { title } = getDocumentMetadata();
   const archetypes = Object.values(AgentArchetype);
+  const [counts, setCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const ideas = getAllIdeas();
+    const c: Record<string, number> = {};
+    archetypes.forEach(a => { c[a] = ideas.filter(i => i.archetype === a).length; });
+    setCounts(c);
+  }, []);
   
   return (
     <div className="container px-4 py-8 md:py-12 md:px-6">
+      <Helmet>
+        <title>AI Agent Archetypes - {title}</title>
+        <meta name="description" content="Explore the six fundamental AI agent archetypes and discover startup ideas for each." />
+      </Helmet>
       <div className="flex flex-col space-y-4 md:space-y-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-2">AI Agent Archetypes</h1>
@@ -26,7 +40,9 @@ export default function ArchetypesPage() {
             <Card key={archetype} className="hover-scale transition-all">
               <CardHeader>
                 <CardTitle>{archetype}</CardTitle>
-                <CardDescription>Explore use cases for this AI agent type</CardDescription>
+                <CardDescription>
+                  {counts[archetype] !== undefined ? formatApproxCount(counts[archetype]) : ''}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Link to={`/archetypes/${encodeURIComponent(archetype)}`}>

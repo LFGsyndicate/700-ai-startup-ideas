@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
+import { Helmet } from 'react-helmet-async';
 
 export default function ArchetypeDetailPage() {
   const { archetype } = useParams<{ archetype: string }>();
@@ -32,6 +33,10 @@ export default function ArchetypeDetailPage() {
   
   return (
     <div className="container px-4 py-8 md:py-12 md:px-6">
+      <Helmet>
+        <title>{`${archetype} - AI Startup Ideas`}</title>
+        <meta name="description" content={`Explore startup ideas for the ${archetype} AI agent archetype.`} />
+      </Helmet>
       <div className="flex flex-col space-y-4 md:space-y-8">
         <div>
           <Link 
