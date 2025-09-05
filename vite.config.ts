@@ -5,8 +5,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig(({ mode }) => {
-  const isProduction = mode === 'production';
-  const base = isProduction ? '/700-ai-startup-ideas/' : '/';
+  const isVercel = process.env.VERCEL === '1';
+  const base = isVercel ? '/' : (process.env.BASE_URL || '/');
 
   return {
     base: base,
